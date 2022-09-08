@@ -1,0 +1,493 @@
+@import "../../node_modules/bootstrap/scss/bootstrap.scss";
+
+:root {
+    font-size: 16px;
+    font-family: "Open Sans";
+    --custom-primary: #3e3f46;
+    --custom-secondary: #434750;
+    --custom-third: #4b5162;
+    --custom-main: #5294e2;
+    --custom-label: #7c818c;
+    --custom-green: #6eff30;
+    --text-clr-1: white;
+    --text-size-1: 1rem;
+}
+
+$custom-primary: #3e3f46;
+$custom-secondary: #434750;
+$custom-third: #4b5162;
+$custom-main: #5294e2;
+$custom-label: #7c818c;
+$custom-green: #6eff30;
+$text-clr-1: white;
+$text-size-1: 1rem;
+
+html,
+body,
+#root {
+    margin: 0;
+    padding: 0;
+    background: $custom-secondary;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    color: $custom-primary;
+}
+
+@mixin kc-hover($v, $c: $custom-main) {
+    color: $c;
+    border: 0.5px solid $c;
+    box-shadow: 0 0 $v $c;
+}
+
+@mixin kc-button($c, $border: false) {
+    background: $custom-primary;
+    border-radius: 1rem;
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+    transition: 0.5s;
+    @if $border {
+        box-shadow: 0 0 0.5rem $custom-label;
+    }
+    color: $text-clr-1;
+    &.start {
+        @include rotateBorder($c);
+        span {
+            z-index: 999;
+        }
+    }
+    &:hover,
+    &:focus {
+        @include kc-hover(2rem, $c);
+        letter-spacing: 0.25rem;
+    }
+
+    &:active {
+        box-shadow: 0 0 0 transparent;
+    }
+}
+
+@mixin rotateBorder($v) {
+    border-radius: 1rem;
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+    transition: 0.5s;
+    color: $text-clr-1;
+    box-shadow: 0 0 10px $v;
+    overflow: hidden;
+    border: 0;
+    background: transparent;
+
+    &:hover,
+    &:focus {
+        &::before {
+            content: "";
+            position: absolute;
+            width: 10%;
+            height: 1000%;
+            background: $v;
+            box-shadow: 0 0 35px $v;
+            animation: buttonAnimate 5s linear infinite;
+        }
+
+        &::after {
+            content: "";
+            position: absolute;
+            inset: 2px;
+            background: $custom-primary;
+            border-radius: 1rem;
+        }
+    }
+}
+
+@mixin kc-input($c, $border: false) {
+    position: relative;
+    width: 100%;
+    border-radius: 1rem;
+
+    @if $border == true {
+        @include kc-hover(1rem, $c);
+        border: 0;
+        color: $text-clr-1;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        background: $custom-primary;
+        border-radius: 1rem;
+        outline: none;
+        color: $text-clr-1;
+        font-size: 1rem;
+        border: 0.5px solid $custom-primary;
+
+        &:valid,
+        &:focus {
+            @include kc-hover(1rem, $c);
+            color: $text-clr-1;
+            text-shadow: 0 0 1rem $c;
+        }
+    }
+
+    span {
+        width: 15%;
+        min-width: max-content;
+        height: 100%;
+        border-radius: 0.5rem 0 0 0.5rem;
+        position: absolute;
+        left: 0;
+        padding: 10px;
+        pointer-events: none;
+        font-size: 1rem;
+        text-transform: uppercase;
+        color: $text-clr-1;
+        transition: 0.5s;
+        background: $custom-third;
+    }
+
+    input:valid ~ span,
+    input:focus ~ span {
+        width: max-content;
+        height: max-content;
+        background: $c;
+        color: $text-clr-1;
+        transform: translateX(10px) translateY(-7px);
+        font-size: 0.65rem;
+        padding: 0 10px;
+        letter-spacing: 0.2rem;
+        border-radius: 2px;
+    }
+}
+
+%kc-btn-hover {
+    @include kc-hover(2rem, $custom-main);
+    letter-spacing: 0.25rem;
+}
+
+%kc-input-hover {
+    @include kc-hover(1rem, $custom-main);
+    color: $text-clr-1;
+    text-shadow: 0 0 1rem $custom-main;
+}
+
+#root {
+    overflow-y: scroll;
+    min-height: 100vh;
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+    z-index: 999;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(transparent, $custom-main);
+    border-radius: 6px;
+    animation: rainbow 5s linear infinite;
+    z-index: 999;
+}
+
+.main-wrapper {
+    min-height: 100vh;
+    padding: 1rem;
+}
+
+.sidebar-container {
+    background-color: $custom-third;
+    margin: 0;
+    padding: 0;
+    width: max-content;
+}
+
+.sidebar-wrapper {
+    width: 5rem;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    transition: 0.5s;
+
+    &.open {
+        width: 15rem;
+
+        .sidebar-item {
+            flex-direction: row;
+            justify-content: start;
+        }
+
+        .sidebar-item-text {
+            display: block;
+        }
+    }
+
+    .sidebar {
+        width: inherit;
+        position: fixed;
+        top: 0;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .sidebar-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 5rem;
+        width: 100%;
+    }
+
+    .sidebar-item-link {
+        height: 100%;
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: left;
+        color: $text-clr-1;
+        text-decoration: none;
+
+        &:hover {
+            color: $text-clr-1;
+        }
+    }
+
+    .sidebar-item-text {
+        display: none;
+    }
+
+    .sidebar-item-link svg {
+        height: 100%;
+        padding: 1rem;
+        border-radius: 10px;
+
+        &:hover {
+            background: var(--random-color);
+            color: $text-clr-1;
+            --random-color: #{rgb(random(255), random(255), random(255))};
+        }
+    }
+}
+
+.classroom-webcam-wrapper {
+    border-radius: 1rem;
+    background: $custom-primary;
+    aspect-ratio: 16/9;
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+
+.classroom-webcam {
+    border-radius: 1rem;
+    background: $custom-primary;
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+
+    border: 0.5px solid $text-clr-1;
+}
+
+.dialog-wrapper {
+    background: $custom-primary;
+    position: absolute;
+    color: $text-clr-1;
+    width: max-content;
+    top: 80%;
+    z-index: 10;
+}
+
+.classroom-remote-webcam {
+    aspect-ratio: 16/9;
+    width: 100%;
+    object-fit: cover;
+}
+
+.custom-card {
+    padding: 1rem;
+    margin: 0;
+    background: $custom-label;
+    color: white;
+    border-radius: 1rem;
+}
+
+.main-btn {
+    @include kc-button($custom-main, false);
+}
+
+.kc-input {
+    @include kc-input($custom-main, false);
+}
+
+.dialog-card {
+    @include rotateBorder($custom-main);
+
+    .card-body * {
+        z-index: 100;
+    }
+}
+
+.dialog-box {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    row-gap: 1rem;
+
+    .dialog {
+        @include kc-hover(0.25rem);
+        border-radius: 1rem;
+        padding-left: 10px;
+        color: white;
+    }
+}
+
+.chatroom-card {
+    @include rotateBorder(#6eff3e);
+
+    .card-body * {
+        z-index: 100;
+    }
+    .chat-input-wrapper {
+        background-color: $custom-label;
+        padding: 0.5rem;
+        border-radius: 1rem;
+    }
+    .chat-input {
+        @include kc-input($custom-green);
+    }
+    .chat-btn {
+        @include kc-button($custom-green, true);
+    }
+}
+
+.trans-btn {
+    @include kc-button($custom-main, true);
+}
+
+.chatroom-box {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    row-gap: 1rem;
+
+    .chat {
+        border-radius: 1rem;
+        padding-left: 10px;
+
+        @include kc-hover(0.25rem, $custom-green);
+        color: white;
+    }
+}
+
+.card {
+    min-height: 40vh;
+    max-height: 60vh;
+    overflow: hidden;
+}
+
+.card-body {
+    min-height: 40vh;
+    max-height: 60vh;
+    overflow-y: scroll;
+}
+
+.sign-card {
+    border-radius: 1rem;
+    padding: 1rem;
+    background: $custom-third;
+    max-height: 100%;
+    margin: 0%;
+    opacity: 0.9;
+    ul {
+        list-style: none;
+        text-decoration: none;
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        padding-left: 1rem;
+        row-gap: 0.5rem;
+        li::before {
+            content: "Student : ";
+        }
+    }
+}
+
+.selection-page {
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    ul {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+
+        li {
+            position: relative;
+            list-style: none;
+            a {
+                position: relative;
+                font-size: 4em;
+                text-decoration: none;
+                line-height: 1em;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+                color: transparent;
+                -webkit-text-stroke: 1px rgba(255, 255, 255, 0.5);
+                &::before {
+                    content: attr(data-text);
+                    position: absolute;
+                    color: var(--clr);
+                    width: 0;
+                    overflow: hidden;
+                    transition: 1s;
+                    border-right: 0.5rem solid var(--clr);
+                    -webkit-text-stroke: 1px var(--clr);
+                }
+                &:hover {
+                    &::before {
+                        width: 100%;
+                        filter: drop-shadow(0 0 1.5rem var(--clr));
+                    }
+                }
+            }
+        }
+    }
+}
+
+@keyframes buttonAnimate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes rainbowBorder {
+    0% {
+        filter: hue-rotate(0deg);
+    }
+    50% {
+        filter: hue-rotate(360deg);
+    }
+}
